@@ -160,6 +160,19 @@ git clone https://github.com/Wei-DuanMu/ui-art-director.git
 
 Restart the session, then invoke it with `/ui-art-director` or just describe a UI review task.
 
+### DeepSeek Harness (DSH)
+
+Two ways, pick either:
+
+**A. Plugin** (managed from the DSH plugin manager) — the `dsh-plugin/` folder in this repo is a zero-dependency Cordis plugin that registers the skill on `ctx.skills`:
+
+- Desktop: **Plugins → install from local path**, select `dsh-plugin/` (or grab the packed `dsh-skill-ui-art-director-*.tgz` from the [latest release](https://github.com/Wei-DuanMu/ui-art-director/releases/latest) and extract it first)
+- CLI: `dsh plugin add <path-to>/dsh-plugin`
+
+**B. Filesystem skill** (no plugin install) — copy `SKILL.md`, `references/`, `templates/`, `examples/` into `<project>/.dsh/skills/ui-art-director/` (project) or `<dshHome>/skills/ui-art-director/` (user). DSH's local skill provider discovers it automatically.
+
+See [dsh-plugin/README.md](dsh-plugin/README.md) for details.
+
 ### Claude Code / Claude-compatible agents
 
 - Personal: copy the folder into `~/.claude/skills/`
@@ -282,11 +295,14 @@ ui-art-director/
 │   ├── screenshot-review.md
 │   ├── code-review.md
 │   └── project-memory.md
-└── examples/                     # Case studies: reasoning references, not designs to copy
-    ├── bad-dashboard.md
-    ├── over-cardified-ui.md
-    ├── redesign-example.md
-    └── good-dashboard.md
+├── examples/                     # Case studies: reasoning references, not designs to copy
+│   ├── bad-dashboard.md
+│   ├── over-cardified-ui.md
+│   ├── redesign-example.md
+│   └── good-dashboard.md
+├── dsh-plugin/                   # DeepSeek Harness plugin packaging (zero-dependency Cordis plugin)
+└── scripts/
+    └── sync-dsh-assets.mjs       # Regenerates dsh-plugin/assets from the canonical skill content
 ```
 
 ## Contributing

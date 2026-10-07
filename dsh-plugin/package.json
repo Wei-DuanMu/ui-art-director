@@ -1,0 +1,35 @@
+{
+  "name": "dsh-skill-ui-art-director",
+  "description": "UI Art Director skill provider for DeepSeek Harness (DSH) — review, critique, and improve UI design with an industrial-futurist editorial visual language",
+  "version": "0.1.1",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "assets"
+  ],
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "dsh-skill",
+    "ui-design",
+    "art-direction",
+    "design-system",
+    "ui-review"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wei-DuanMu/ui-art-director.git",
+    "directory": "dsh-plugin"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

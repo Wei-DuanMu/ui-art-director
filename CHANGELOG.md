@@ -20,6 +20,15 @@ Planned, not yet implemented. See the Roadmap in README.md for status definition
 ### Planned for v1.0.0
 - Stable UI art direction methodology
 
+## [0.1.1] - 2026-10-08
+
+Distribution release — no methodology changes.
+
+### Added
+- `dsh-plugin/`: DeepSeek Harness (DSH) plugin packaging — a zero-dependency Cordis plugin (`dsh-skill-ui-art-director`) that registers the skill as a bundled `SkillProvider` on `ctx.skills`, installable from the DSH desktop plugin manager or CLI by local path
+- `scripts/sync-dsh-assets.mjs`: regenerates `dsh-plugin/assets/` from the canonical skill content (run after any skill edit)
+- README: DeepSeek Harness installation section (plugin route and filesystem-skill route); repository layout updated
+
 ## [0.1.0] - 2026-10-08
 
 Initial open-source release.
