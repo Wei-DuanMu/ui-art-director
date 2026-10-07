@@ -2,9 +2,10 @@
 
 ## Critique sequence
 
-1. Overall diagnosis — one sentence
+0. **Composition review first** — visual anchor, focal point, balance, proportion, asymmetry, density, whitespace, alignment, proximity, separation, rhythm, visual weight. Structural findings must never be drowned by system-level nits.
+1. Overall diagnosis — one sentence, composition verdict first
 2. Top three issues, ordered by impact
-3. Structural vs visual vs system problems, separated
+3. Composition vs structural vs visual vs system problems, separated
 4. Art direction — keywords, anchors, constraints
 5. Concrete changes — measurable or actionable
 6. Why each major change works
@@ -20,15 +21,19 @@ Never invert this order. Concrete changes without diagnosis teach nothing; diagn
 | Category | Points |
 |---|---|
 | Visual Hierarchy | /15 |
-| Typography | /15 |
-| Layout & Composition | /15 |
+| Composition | /15 |
+| Typography | /10 |
+| Spatial Relationships | /10 |
 | Color System | /10 |
-| Component Consistency | /10 |
 | Information Density | /10 |
-| Brand Identity | /10 |
+| Layout | /5 |
+| Component Consistency | /5 |
+| Brand Identity | /5 |
 | Interaction Design | /5 |
 | Responsive Design | /5 |
 | Originality | /5 |
+
+**Rebalance note (V0.1 → V0.2):** the V0.2 category list as drafted summed to 110, so two weights were reduced to keep the total at 100. Layout 10→5 (its composition-level responsibilities moved to the new Composition category; what remains is grid/gutter mechanics) and Component Consistency 10→5 (consistent with the V0.2 principle that components are means, not ends — a page may not earn component points it never needed). Composition /15 and Spatial Relationships /10 are new first-class categories.
 
 Bands:
 
@@ -44,7 +49,8 @@ Rules:
 
 - Explain every sub-score in one line.
 - Never score a design you haven't actually reviewed.
-- A score is a diagnostic instrument, not a verdict on the designer. Low scores come with fixes; high scores come with what to protect.
+- A score is a structured diagnostic instrument — it locates problems; it never substitutes for critique and never measures "objective beauty."
+- A page can score well on system categories (color, components, tokens) and still fail. When Composition + Visual Hierarchy + Spatial Relationships total ≤20/40, the verdict is "system-correct, composition-flat" regardless of the total.
 
 ## Priorities
 

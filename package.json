@@ -1,7 +1,7 @@
 {
   "name": "dsh-skill-ui-art-director",
   "description": "UI Art Director skill provider for DeepSeek Harness (DSH) — review, critique, and improve UI design with an industrial-futurist editorial visual language",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "type": "module",
   "main": "lib/index.js",
   "exports": {

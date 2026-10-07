@@ -15,6 +15,16 @@ Copy this file into your project (e.g., `.ui-art-director.md` or your agent's me
 **Design Philosophy:**
 [2–3 sentences. What does this product believe about how interfaces should work?]
 
+## Composition Conventions
+
+**Default composition grammar:** [which of patterns 01–07 this product uses by default, per page type]
+
+**Anchor conventions:** [what usually carries the anchor — e.g., "primary metric in display type, never in a card"; "workspace canvas owns 70% of app views"]
+
+**Attention budget norms:** [any product-specific deviations from the default 35–45 / 20–30 / 15–25 / 5–15 / 0–5]
+
+**Rail / navigation pattern:** [where utility lives, and its weight ceiling]
+
 ## Color Palette
 
 - background:

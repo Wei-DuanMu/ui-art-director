@@ -1,5 +1,7 @@
 # Layout and Composition
 
+> **Scope note (V0.2):** this file owns layout *mechanics* — grids, gutters, rhythm, density classification. The composition *decision* (which pattern, which anchor, how attention is allocated) lives in `composition-grammar.md`, `focal-point.md`, `spatial-relationships.md`, and `visual-weight.md`. Mechanics serve the decision, never precede it.
+
 ## Priority
 
 Composition establishes hierarchy before decoration. A well-composed page in plain black and white beats a decorated page with no structure. When reviewing, evaluate the composition with all color and effects mentally removed.
