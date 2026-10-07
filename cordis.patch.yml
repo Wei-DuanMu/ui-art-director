@@ -1,0 +1,8 @@
+# Bundle layer for DeepSeek Harness.
+#
+# The plugin row references this package by name so Node resolution finds the
+# installed code. The plugin declares `inject = ['skills']` itself and
+# registers the bundled `ui-art-director` skill provider on `ctx.skills`.
+- insert:
+    - id: ui-art-director-skill
+      name: dsh-skill-ui-art-director

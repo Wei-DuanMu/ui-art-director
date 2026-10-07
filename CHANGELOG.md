@@ -20,6 +20,18 @@ Planned, not yet implemented. See the Roadmap in README.md for status definition
 ### Planned for v1.0.0
 - Stable UI art direction methodology
 
+## [0.1.2] - 2026-10-08
+
+Fixes DSH installation. Thanks to the first report.
+
+### Fixed
+- **DSH plugin installation rejected the package.** The plugin manager refused the install because the package did not declare a DSH bundle — per DSH's own documentation, "a package without the `dsh.bundle` declaration still installs, but only as a plain dependency: activates no layer". Added the `dsh.bundle.patch` manifest and `cordis.patch.yml` layer, so `dsh plugin add github:Wei-DuanMu/ui-art-director` now installs a real, mountable bundle.
+
+### Changed
+- **The repository root is now the plugin package.** Previously the plugin lived in `dsh-plugin/` with a generated copy of the skill content, which required a sync step and shipped the content twice. The plugin entry now lives at `lib/index.js` and reads `SKILL.md`, `references/`, `templates/`, and `examples/` from the package root.
+- Removed `dsh-plugin/` and `scripts/sync-dsh-assets.mjs` (and with them the duplicated assets).
+- README: corrected DeepSeek Harness install instructions (GitHub / tarball / local clone / filesystem skill) and repository layout.
+
 ## [0.1.1] - 2026-10-08
 
 Distribution release — no methodology changes.

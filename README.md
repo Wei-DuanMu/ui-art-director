@@ -162,16 +162,35 @@ Restart the session, then invoke it with `/ui-art-director` or just describe a U
 
 ### DeepSeek Harness (DSH)
 
-Two ways, pick either:
+This repository is itself a DSH **bundle**: `package.json` declares `dsh.bundle.patch`, so the plugin manager can install it directly. It is a zero-dependency, build-free plugin — the skill body ships inside the package and registers itself on `ctx.skills`.
 
-**A. Plugin** (managed from the DSH plugin manager) — the `dsh-plugin/` folder in this repo is a zero-dependency Cordis plugin that registers the skill on `ctx.skills`:
+**Install from GitHub** (desktop: paste into the add-plugin field; CLI below):
 
-- Desktop: **Plugins → install from local path**, select `dsh-plugin/` (or grab the packed `dsh-skill-ui-art-director-*.tgz` from the [latest release](https://github.com/Wei-DuanMu/ui-art-director/releases/latest) and extract it first)
-- CLI: `dsh plugin add <path-to>/dsh-plugin`
+```bash
+dsh plugin --profile desktop add github:Wei-DuanMu/ui-art-director
+```
 
-**B. Filesystem skill** (no plugin install) — copy `SKILL.md`, `references/`, `templates/`, `examples/` into `<project>/.dsh/skills/ui-art-director/` (project) or `<dshHome>/skills/ui-art-director/` (user). DSH's local skill provider discovers it automatically.
+No build-script permission is needed: the plugin ships ready-to-run JavaScript, so pnpm has nothing to allow.
 
-See [dsh-plugin/README.md](dsh-plugin/README.md) for details.
+**Install from a tarball** (no git, no registry):
+
+```bash
+# dsh-skill-ui-art-director-<version>.tgz is attached to each GitHub release
+dsh plugin --profile desktop add ./dsh-skill-ui-art-director-0.1.2.tgz
+```
+
+**Install from a local clone:** `dsh plugin --profile desktop add <path-to>/ui-art-director`
+
+After the install completes, enable the new bundle in the plugin list (the install dialog offers **Enable now**).
+
+**No install at all** — DSH also discovers plain skill folders. Copy `SKILL.md`, `references/`, `templates/`, and `examples/` into either:
+
+| Level | Path |
+|---|---|
+| user | `~/.dsh/skills/ui-art-director/` (Windows: `%USERPROFILE%\.dsh\skills\ui-art-director\`) |
+| project | `<project>/.dsh/skills/ui-art-director/` |
+
+This route needs no plugin machinery at all — the skill is discovered on the next session.
 
 ### Claude Code / Claude-compatible agents
 
@@ -300,10 +319,13 @@ ui-art-director/
 │   ├── over-cardified-ui.md
 │   ├── redesign-example.md
 │   └── good-dashboard.md
-├── dsh-plugin/                   # DeepSeek Harness plugin packaging (zero-dependency Cordis plugin)
-└── scripts/
-    └── sync-dsh-assets.mjs       # Regenerates dsh-plugin/assets from the canonical skill content
+├── package.json                  # DSH bundle manifest (dsh.bundle.patch) + npm package
+├── cordis.patch.yml              # DSH bundle layer: mounts the plugin on ctx.skills
+└── lib/
+    └── index.js                  # Zero-dependency Cordis plugin: registers the skill provider
 ```
+
+The skill content at the repository root **is** the plugin payload — there is no duplicated copy to keep in sync.
 
 ## Contributing
 

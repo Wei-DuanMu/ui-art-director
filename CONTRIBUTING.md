@@ -77,6 +77,20 @@ Contradictions between files are high-priority bugs — the skill's authority de
 
 Keep the core identity intact: this is an **AI Art Director**, not a UI generator, prompt pack, or component library. Contributions that push the skill toward "just generate a pretty page" will be asked to rework toward Observe → Diagnose → Explain → Direct → Improve.
 
+## The package is also a DSH bundle
+
+`package.json` and `cordis.patch.yml` make this repository installable as a DeepSeek Harness plugin. Two rules keep it installable:
+
+- **Keep the skill content at the repository root.** `lib/index.js` reads `SKILL.md`, `references/`, `templates/`, and `examples/` relative to the package root, and `files` in `package.json` decides what ships. Moving them breaks the plugin payload.
+- **Never break the bundle declaration.** DSH installs a package that declares `dsh.bundle.patch` as a mountable layer; a package without it installs as a plain dependency and silently activates nothing. This also means the package name (`dsh-skill-ui-art-director`) and the plugin row name in `cordis.patch.yml` must stay in sync.
+
+Verify packaging after changes:
+
+```bash
+npm pack --dry-run          # confirm cordis.patch.yml, SKILL.md, references/ are included
+node -e "import('./lib/index.js')" # entry must load without errors
+```
+
 ## License
 
 By contributing, you agree that your contributions will be licensed under the MIT License.
