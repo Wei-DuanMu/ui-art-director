@@ -7,14 +7,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Planned, not yet implemented. See the Roadmap in README.md for status definitions.
+Nothing yet. See the Roadmap in README.md for status definitions.
 
-### Planned for v0.3.0
-- Case study system expansion; structured taste-training exercise library
-- A/B test results (docs/ab-test-v0.2.md) incorporated
+## [0.3.0] — 2026-10-10
 
-### Planned for v1.0.0
-- Stable UI art direction methodology
+Dual Mode + Execution First. (This is the release described in the v0.3.0 planning notes as "V0.2.0"; the number moved because v0.2.0 Composition First had already shipped.)
+
+### Added — dual mode
+
+- **Two visual modes** — `general` (default) and `arknights`, specified in `SKILL.md` §1. No third mode.
+- **Mode resolution order** — task requirement > project config > session setting > default. Higher rungs win; the first match decides.
+- **Mode isolation contract** — shared engineering layer (IA, behaviour, accessibility), separate visual layer (color, geometry, label vocabulary, texture). Switching mode changes style and never removes capability.
+- **Reference sets split by mode** — `references/general/` (16 files) and `references/arknights/` (10 files). The split is structural: a rule in one mode's set cannot leak into the other because it is not in the other's load set.
+- `references/arknights/` — mode overview with **seven refusals** (no HUD line-stuffing, no meaningless numbers, no neon abuse, no decorative borders, no everything-is-a-panel, no screenshot copying, complexity ≠ quality), plus visual language, color, typography, geometry, components, information hierarchy, motion, and four page patterns (P1 Operations Console / P2 Dossier / P3 Workbench / P4 Status Gate).
+- **Four-level source tagging** — `[OBSERVED]` / `[GENERALIZED]` / `[INFERRED]` / `[ORIGINAL]`, with `references/arknights/reference-index.md` as a public evidence ledger. Verified: the S1 homepage. Partial: S2 (dynamic, locally 502). Unanalyzed: S3 (12 video links, contents not reviewed). **Excluded: S4 — verified reachable but it is a Photoshop tutorial, not UI analysis.**
+- `config/mode-config.example.yaml` — project-level mode selection.
+- `references/general/accessibility.md` — contrast, focus visibility, touch targets, motion safety, semantics, text alternatives. Accessibility findings are never P3.
+- `templates/design-decision-record.md` — goal, observed problem, composition strategy, spatial/weight plan, implementation, acceptance criteria, result.
+- `examples/mode-switching.md` — General → Arknights → General worked example.
+- `docs/mode-selection.md`, `docs/reference-methodology.md`.
+
+### Added — Execution First
+
+- **§15 Execution discipline** — an 8-step loop that requires editing real code, running it, rendering it, and grading the gap before reporting success.
+- **Run/Render Verification** clause — a verification claim must name what was actually rendered.
+- **Honest verification scope** — when the environment cannot render or run, the skill states the achieved scope and lists unverified steps. Inventing verification results is now an explicit violation.
+
+### Changed
+
+- **Working loop** is now `Understand → Compose → Prioritize → Direct → Implement → Verify → Critique → Iterate` — `Verify` is new and sits between implementation and critique.
+- **Scoring rebalanced to 100** — Layout Quality 10 and Component Consistency 10 (previously demoted in v0.2) are restored as first-class dimensions; Information Density and Responsive Design yield a point each to Density 5 / Responsive 3. Arknights-mode checks are scored separately and never inflate the 100.
+- `references/critique-and-taste.md` updated to the v0.3 rubric.
+- `templates/ui-review.md` — mode row, 12-check Composition Review, v0.3 rubric, plus four Arknights-specific checks marked as outside the 100.
+- `templates/project-memory.md` — composition conventions (default grammar, anchor conventions, budget rules, rail rules).
+- `examples/good-dashboard.md` updated for the new rubric.
+
+### Evaluation — real, not promised
+
+- `evaluation/` with four test groups, original hand-written HTML/CSS sandbox pages, and headless-Edge screenshots.
+  - **Test A** (General AI dev workspace): 79/100. Two real defects found by looking at the render — an under-filled anchor region and an illegible DONE row.
+  - **Test B** (same brief, Arknights register): 79/100. Three render iterations to fit the viewport without losing the composer. Zero mode leakage in either direction.
+  - **Test C** (mode switching): visual isolation demonstrated; **configuration-driven precedence NOT RUN** and marked as such.
+  - **Test D** (execution quality): 51 → 75/100 across four rounds, composition core 20/40 → 36/40, clearing the `composition-flat` verdict.
+- `evaluation/README.md` — method and binding honesty rules: no score without a rendered artifact, no verified claim without a method, unfinished work marked unfinished.
+
+### Honest findings recorded rather than smoothed over
+
+- **Test D needed two wrong fixes before converging.** Both came from treating a symptom as a factor — a void treated as a height problem, and an over-loud sparkline treated as a size problem when it was a contrast problem. The rule was already written in `execution-gap.md` and was still violated on the first honest attempt. A documented rule that gets violated is not yet an internalized rule.
+- **Mode precedence rungs 2–4 are specified but unvalidated.** All switching in v0.3.0 was driven from the task instruction, the top rung. Tracked as the first v0.4.0 task.
+- **Interaction and responsive scores are near-floor and near-meaningless.** Static screenshots cannot evidence them; they are reported as absence of evidence, not as proof.
 
 ## [0.2.0] - 2026-10-08
 

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Test D — BEFORE · mediocre dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f1117; color: #e8eaf0; font-family: "Segoe UI", "PingFang SC", sans-serif; }
+  .banner {
+    padding: 34px 28px; background: linear-gradient(120deg, #5b2be0, #0ea5e9);
+    border-radius: 0 0 18px 18px;
+  }
+  .banner h1 { font-size: 26px; font-weight: 700; }
+  .banner p { opacity: .85; margin-top: 6px; font-size: 13px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; padding: 22px 28px; }
+  .card {
+    background: #181b25; border-radius: 14px; padding: 18px;
+    box-shadow: 0 6px 24px rgba(0,0,0,.35);
+  }
+  .card .ic { font-size: 22px; }
+  .card .v { font-size: 26px; font-weight: 700; margin: 10px 0 2px; }
+  .card .l { font-size: 12px; color: #8a90a3; }
+  .card.a .v { color: #c084fc; } .card.b .v { color: #22d3ee; } .card.c .v { color: #4ade80; }
+  .card.d .v { color: #fbbf24; } .card.e .v { color: #f472b6; } .card.f .v { color: #38bdf8; }
+  .charts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; padding: 0 28px 28px; }
+  .chart { background: #181b25; border-radius: 14px; height: 150px; padding: 14px; color: #8a90a3; font-size: 12px; }
+</style>
+</head>
+<body>
+  <div class="banner">
+    <h1>✨ 欢迎回来，管理员！</h1>
+    <p>这是你的配送车队运营概览，今天也要加油哦</p>
+  </div>
+  <div class="grid">
+    <div class="card a"><div class="ic">💜</div><div class="v">1,204</div><div class="l">今日配送</div></div>
+    <div class="card b"><div class="ic">💙</div><div class="v">87.3%</div><div class="l">准时率</div></div>
+    <div class="card c"><div class="ic">💚</div><div class="v">$3.2k</div><div class="l">燃油成本</div></div>
+    <div class="card d"><div class="ic">🧡</div><div class="v">42</div><div class="l">告警</div></div>
+    <div class="card e"><div class="ic">💗</div><div class="v">99.9%</div><div class="l">在线率</div></div>
+    <div class="card f"><div class="ic">💛</div><div class="v">18</div><div class="l">车辆</div></div>
+  </div>
+  <div class="charts">
+    <div class="chart">折线图（无标题）</div>
+    <div class="chart">饼图（五色装饰）</div>
+    <div class="chart">柱状图（无单位）</div>
+  </div>
+</body>
+</html>

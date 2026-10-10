@@ -70,7 +70,7 @@ Contradictions between files are high-priority bugs — the skill's authority de
 ## Maintaining consistency
 
 - `SKILL.md` is the summary layer. If you change a rule in a reference, check whether `SKILL.md` summarizes it and update both.
-- Scoring categories, score bands, and the P0–P3 priority scale are defined in `references/critique-and-taste.md` and mirrored in `templates/ui-review.md` and `SKILL.md`. Change them in all three places or not at all.
+- Scoring categories, score bands, and the P0–P3 priority scale are defined in `references/general/critique-and-taste.md` and mirrored in `templates/ui-review.md` and `SKILL.md`. Change them in all three places or not at all.
 - Keep the project light. Do not add directories or files to "look professional" — every file must earn its place.
 
 ## Project identity

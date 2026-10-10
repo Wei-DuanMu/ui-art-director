@@ -1,0 +1,19 @@
+# UI Art Director — mode configuration example.
+#
+# Copy this file to your project root as `mode-config.yaml` (or fold the key
+# into your project's existing config) to pin the mode for this project.
+#
+# Resolution order (highest wins):
+#   1. explicit mode request in the current task ("用方舟模式做这个页面")
+#   2. this project config
+#   3. a mode set earlier in the current session
+#   4. default: general
+#
+# Two modes exist. There is no third mode.
+
+ui_art_director:
+  # general      — product-appropriate professional UI (default)
+  # arknights    — industrial-signal register inspired by Arknights art
+  #                direction (unofficial design research; see
+  #                references/arknights/README.md)
+  mode: general

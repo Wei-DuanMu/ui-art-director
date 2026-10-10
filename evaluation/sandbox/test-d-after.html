@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Test D — AFTER · fleet ops console (general mode)</title>
+<style>
+  :root {
+    --bg: #101216; --surface: #16191f; --border: #2a2f3a;
+    --text: #e6e9ee; --text-dim: #9aa3b0; --text-faint: #67707e;
+    --accent: #4fd1c5; --warn: #e0b34f; --danger: #d9614f;
+    --mono: "JetBrains Mono", Consolas, monospace;
+    --sans: "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px;
+    min-height: 100vh; display: flex; flex-direction: column; }
+
+  header {
+    display: flex; align-items: baseline; gap: 18px;
+    padding: 18px 28px 14px; border-bottom: 1px solid var(--border);
+  }
+  header .mark { font-weight: 800; font-size: 15px; letter-spacing: .05em; }
+  header .mark em { color: var(--accent); font-style: normal; }
+  header .sub { font-size: 12px; color: var(--text-faint); }
+  header .meta { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--text-faint); }
+
+  main { flex: 1; display: grid; grid-template-columns: 1.9fr 1fr; }
+
+  /* PRIMARY ANCHOR */
+  .anchor { padding: 26px 28px 22px; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+  .anchor .lbl { font-size: 11px; letter-spacing: .14em; color: var(--text-faint); text-transform: uppercase; }
+  .anchor .num { font-family: var(--mono); font-size: 64px; font-weight: 700; line-height: 1.1; margin: 6px 0 2px; }
+  .anchor .qual { font-size: 12.5px; color: var(--text-dim); }
+  .anchor .qual b { color: var(--accent); font-weight: 600; }
+  .spark { display: flex; align-items: flex-end; gap: 5px; flex: 1; min-height: 44px; margin-top: 18px; }
+  .spark i { flex: 1; background: rgba(255,255,255,.07); }
+  .spark i.hot { background: var(--accent); opacity: .5; }
+  .spark-axis { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; color: var(--text-faint); margin-top: 10px; }
+
+  .secondary { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); }
+  .metric { padding: 16px 28px; border-right: 1px solid var(--border); }
+  .metric:last-child { border-right: none; }
+  .metric .v { font-family: var(--mono); font-size: 22px; font-weight: 600; margin-top: 4px; }
+  .metric .l { font-size: 11px; letter-spacing: .12em; color: var(--text-faint); text-transform: uppercase; }
+  .metric .d { font-family: var(--mono); font-size: 11px; margin-top: 2px; }
+  .metric .up { color: var(--accent); } .metric .dn { color: var(--text-faint); }
+
+  /* ALERT QUEUE — entities that earn rows */
+  .alerts { padding: 18px 0 0; }
+  .alerts .th {
+    display: flex; align-items: baseline; padding: 0 22px 10px;
+    font-size: 11px; letter-spacing: .14em; color: var(--text-faint); text-transform: uppercase;
+  }
+  .alerts .th .n { margin-left: auto; font-family: var(--mono); color: var(--danger); }
+  .alert {
+    display: grid; grid-template-columns: 8px 52px 1fr auto; gap: 12px; align-items: baseline;
+    padding: 9px 22px; border-top: 1px solid var(--border); font-size: 12.5px;
+  }
+  .alert .mk { width: 8px; height: 8px; background: var(--danger); align-self: center; }
+  .alert .mk.w { background: var(--warn); }
+  .alert .t { font-family: var(--mono); font-size: 11px; color: var(--text-faint); }
+  .alert .d { color: var(--text-dim); }
+  .alert .d b { color: var(--text); font-weight: 600; }
+  .alert .a { font-family: var(--mono); font-size: 10.5px; color: var(--accent); border: 1px solid var(--border); padding: 2px 8px; }
+
+  .foot {
+    display: flex; gap: 26px; padding: 12px 28px; border-top: 1px solid var(--border);
+    font-family: var(--mono); font-size: 11px; color: var(--text-faint);
+  }
+  .foot b { color: var(--text-dim); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="mark">NORTHBEAM<em>/</em>FLEET</span>
+  <span class="sub">运营监控 · 北区</span>
+  <span class="meta">2026-10-10 20:14 UTC+8</span>
+</header>
+
+<main>
+  <section class="anchor">
+    <div class="lbl">今日配送 · 实时</div>
+    <div class="num">1,204</div>
+    <div class="qual"><b>▲ +8.2%</b> vs 7 日均值 · 准时率 87.3% · 目标 90%</div>
+    <div class="spark">
+      <i style="height:30%"></i><i style="height:42%"></i><i style="height:38%"></i>
+      <i style="height:55%"></i><i style="height:48%"></i><i style="height:62%"></i>
+      <i style="height:56%"></i><i style="height:70%"></i><i style="height:64%"></i>
+      <i style="height:78%"></i><i style="height:72%"></i><i style="height:86%"></i>
+      <i style="height:80%"></i><i class="hot" style="height:100%"></i>
+    </div>
+    <div class="spark-axis"><span>10-04</span><span>近 14 日配送量</span><span>10-10</span></div>
+  </section>
+
+  <section class="alerts">
+    <div class="th">告警 · 需处理 <span class="n">4</span></div>
+    <div class="alert"><span class="mk"></span><span class="t">09:31</span><span class="d"><b>VH-2217</b> 冷却液 108°C · 阈值 105</span><span class="a">指派</span></div>
+    <div class="alert"><span class="mk"></span><span class="t">08:57</span><span class="d"><b>VH-0843</b> 路线偏离 12 km</span><span class="a">复核</span></div>
+    <div class="alert"><span class="mk w"></span><span class="t">08:12</span><span class="d"><b>VH-1190</b> 配送延误 +45 min</span><span class="a">联系</span></div>
+    <div class="alert"><span class="mk w"></span><span class="t">07:48</span><span class="d"><b>VH-2034</b> 油量 8%</span><span class="a">指派</span></div>
+  </section>
+</main>
+
+<section class="secondary">
+  <div class="metric"><div class="l">在线率 · 30 日</div><div class="v">99.9%</div><div class="d dn">SLO 99.9% · 达标</div></div>
+  <div class="metric"><div class="l">燃油成本 · 7 日</div><div class="v">$3,214</div><div class="d up">▼ 4% vs 上周</div></div>
+  <div class="metric"><div class="l">活跃车辆</div><div class="v">18<span style="color:var(--text-faint);font-size:14px">/20</span></div><div class="d dn">2 辆保养中</div></div>
+  <div class="metric"><div class="l">准点趋势 · 14 日</div><div class="v">▁▂▃▅▄▆▇</div><div class="d up">+2.1pt 爬升中</div></div>
+</section>
+
+<div class="foot">
+  <span>DATA <b>REALTIME · 30s REFRESH</b></span>
+  <span>REGION <b>NORTH-3</b></span>
+  <span>OPERATOR <b>K.</b></span>
+  <span style="margin-left:auto">NORTHBEAM FLEET CONSOLE v2.1</span>
+</div>
+
+</body>
+</html>

@@ -16,7 +16,7 @@ Never invert this order. Concrete changes without diagnosis teach nothing; diagn
 
 ## Scoring rubric
 
-100 points, used to locate problems:
+100 points — a heuristic instrument for comparing iterations, not an objective law of beauty:
 
 | Category | Points |
 |---|---|
@@ -24,16 +24,16 @@ Never invert this order. Concrete changes without diagnosis teach nothing; diagn
 | Composition | /15 |
 | Typography | /10 |
 | Spatial Relationships | /10 |
+| Layout Quality | /10 |
 | Color System | /10 |
-| Information Density | /10 |
-| Layout | /5 |
-| Component Consistency | /5 |
+| Component Consistency | /10 |
+| Information Density | /5 |
 | Brand Identity | /5 |
-| Interaction Design | /5 |
-| Responsive Design | /5 |
-| Originality | /5 |
+| Interaction Quality | /5 |
+| Responsive Design | /3 |
+| Originality | /2 |
 
-**Rebalance note (V0.1 → V0.2):** the V0.2 category list as drafted summed to 110, so two weights were reduced to keep the total at 100. Layout 10→5 (its composition-level responsibilities moved to the new Composition category; what remains is grid/gutter mechanics) and Component Consistency 10→5 (consistent with the V0.2 principle that components are means, not ends — a page may not earn component points it never needed). Composition /15 and Spatial Relationships /10 are new first-class categories.
+**Change note (v0.2.0 → v0.3.0):** weights re-specified by the V0.2.0 Dual-Mode requirements — Layout Quality and Component Consistency restored to /10 (they carry real execution signal once composition is first-class), Information Density 10→5, Responsive 5→3, Originality 5→2. Total remains 100. Composition + Visual Hierarchy + Spatial Relationships still form the 40-point composition core.
 
 Bands:
 
@@ -47,10 +47,12 @@ Bands:
 
 Rules:
 
-- Explain every sub-score in one line.
+- Evidence for every sub-score — one line, pointing at something visible.
 - Never score a design you haven't actually reviewed.
+- No points for style alone; none for resemblance to a reference. Visually striking + poor readability/interaction/function → deduct explicitly.
 - A score is a structured diagnostic instrument — it locates problems; it never substitutes for critique and never measures "objective beauty."
-- A page can score well on system categories (color, components, tokens) and still fail. When Composition + Visual Hierarchy + Spatial Relationships total ≤20/40, the verdict is "system-correct, composition-flat" regardless of the total.
+- When Composition + Visual Hierarchy + Spatial Relationships total ≤20/40, the verdict is "system-correct, composition-flat" regardless of the total.
+- Arknights Mode runs extra checks (traceable references, abstraction not copying, no meaningless HUD, seven refusals) — reported separately, never added to the 100.
 
 ## Priorities
 

@@ -1,5 +1,7 @@
 # UI ART DIRECTION REVIEW
 
+**Mode:** [general / arknights]
+
 ## Overall
 
 [One-sentence diagnosis — state the composition verdict first]
@@ -23,25 +25,32 @@
 
 ## Score
 
-| Category | Score | One-line justification |
+| Category | Score | Evidence (one line) |
 |---|---|---|
 | Visual Hierarchy | /15 | |
 | Composition | /15 | |
 | Typography | /10 | |
 | Spatial Relationships | /10 | |
+| Layout Quality | /10 | |
 | Color System | /10 | |
-| Information Density | /10 | |
-| Layout | /5 | |
-| Component Consistency | /5 | |
+| Component Consistency | /10 | |
+| Information Density | /5 | |
 | Brand Identity | /5 | |
-| Interaction Design | /5 | |
-| Responsive Design | /5 | |
-| Originality | /5 | |
+| Interaction Quality | /5 | |
+| Responsive Design | /3 | |
+| Originality | /2 | |
 | **Total** | **/100** | |
 
 Band: [ 90–100 Excellent · 80–89 Strong · 70–79 Good but inconsistent · 60–69 Needs significant improvement · <60 Weak visual system ]
 
 Composition core (Visual Hierarchy + Composition + Spatial Relationships): /40 — ≤20 means "system-correct, composition-flat" regardless of total.
+
+## Mode-Specific Checks (arknights only — not counted in the 100)
+
+- [ ] References traceable per `references/arknights/reference-index.md`
+- [ ] Abstraction, not copying (no recognizable game screen)
+- [ ] No meaningless HUD lines/numbers/borders
+- [ ] Seven refusals hold
 
 ## Top 3 Problems
 
@@ -63,7 +72,7 @@ Visual keywords:
 
 Anchor: [the one dominant element everything else defers to]
 
-Composition grammar: [chosen pattern 01–07 + why]
+Composition grammar: [chosen pattern 01–07 / arknights P1–P4 + why]
 
 Keep:
 -
@@ -84,7 +93,7 @@ Avoid:
 ### Decoration
 ### Motion
 
-[Each change: "change X to Y because Z" — measurable or actionable, never vague. State Intent → Decision → Effect for major moves.]
+[Each change: "change X to Y because Z" — measurable or actionable, never vague. State Intent → Decision → Effect for major moves. Fix order: composition → hierarchy → spatial → color/decoration polish.]
 
 ## Before → After
 

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test B — Arknights Mode · AI Dev Workspace</title>
+<style>
+  /* ============ ARKNIGHTS MODE · original register tokens ============ */
+  :root {
+    --bg: #141414;             /* matte near-black, warm bias */
+    --surface: #1b1b1a;
+    --surface-2: #222221;
+    --border: #33332f;
+    --text: #e8e6e0;
+    --text-dim: #a09c92;
+    --text-faint: #6b685f;
+    --signal: #f5a623;         /* safety amber — the one accent */
+    --signal-dark: #1a1508;
+    --crit: #d0533c;
+    --ok: #8a9a6b;
+    --mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+    --sans: "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    --chamfer: 10px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--sans); font-size: 14px; line-height: 1.55;
+    min-height: 100vh; display: flex; flex-direction: column;
+  }
+
+  /* ---------- top bar ---------- */
+  header {
+    flex: none; display: flex; align-items: stretch; height: 52px;
+    border-bottom: 1px solid var(--border);
+  }
+  header .mark {
+    display: flex; align-items: center; padding: 0 18px;
+    font-weight: 800; letter-spacing: .06em; font-size: 15px;
+    border-right: 1px solid var(--border);
+  }
+  header .mark em { color: var(--signal); font-style: normal; }
+  header .sec {
+    display: flex; align-items: center; gap: 22px; padding: 0 22px; font-size: 12.5px;
+  }
+  header .sec a { color: var(--text-dim); text-decoration: none; letter-spacing: .04em; }
+  header .sec a b { color: var(--text-faint); font-weight: 500; margin-right: 5px; font-family: var(--mono); font-size: 11px; }
+  header .sec a.on { color: var(--text); box-shadow: inset 0 -2px 0 var(--signal); }
+  header .sec a.on b { color: var(--signal); }
+  header .tail { margin-left: auto; display: flex; align-items: center; gap: 16px; padding: 0 18px;
+    font-family: var(--mono); font-size: 11px; color: var(--text-faint); }
+  header .tail .live { color: var(--signal); }
+
+  /* ---------- section header band ---------- */
+  .sechead {
+    flex: none; display: flex; align-items: baseline; gap: 18px;
+    padding: 14px 24px 10px; border-bottom: 1px solid var(--border);
+  }
+  .sechead .idx { font-family: var(--mono); font-size: 12px; color: var(--signal); }
+  .sechead h1 { font-size: 22px; font-weight: 800; letter-spacing: .02em; }
+  .sechead .meta { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--text-faint); }
+
+  main { flex: 1; display: grid; grid-template-columns: 1fr 340px; min-height: 0; overflow: hidden; }
+  body { overflow: hidden; height: 100vh; }
+
+  /* ---------- PRIMARY: the diff viewport ---------- */
+  .viewport {
+    position: relative; margin: 16px 24px; border: 1px solid var(--border); background: var(--surface);
+    display: flex; flex-direction: column; min-width: 0; min-height: 0;
+  }
+  /* corner ticks: live instrument frame */
+  .viewport::before, .viewport::after,
+  .viewport .tk-b::before, .viewport .tk-b::after {
+    content: ""; position: absolute; width: 14px; height: 14px; border: 1px solid var(--text-faint);
+  }
+  .viewport::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+  .viewport::after { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+  .viewport .tk-b::before { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+  .viewport .tk-b::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+  .viewport .vhead {
+    flex: none; display: flex; align-items: center; gap: 14px;
+    padding: 10px 16px; border-bottom: 1px solid var(--border);
+    font-family: var(--mono); font-size: 12px;
+  }
+  .viewport .vhead .file { color: var(--text); }
+  .viewport .vhead .diff { margin-left: auto; font-size: 11px; color: var(--text-faint); }
+  .viewport .vhead .diff b { color: var(--signal); font-weight: 500; }
+
+  .code { flex: 1; overflow: auto; padding: 16px 0; font-family: var(--mono); font-size: 13px; line-height: 1.75; }
+  .code .row { display: grid; grid-template-columns: 56px 24px 1fr; }
+  .code .ln { text-align: right; padding-right: 14px; color: var(--text-faint); user-select: none; }
+  .code .sig { text-align: center; user-select: none; }
+  .code .add { background: rgba(245,166,35,.06); border-left: 2px solid var(--signal); }
+  .code .add .sig { color: var(--signal); }
+  .code .del { background: rgba(208,83,60,.05); border-left: 2px solid transparent; }
+  .code .del .sig { color: var(--crit); }
+  .code .del .tx { color: var(--text-dim); text-decoration: line-through; text-decoration-color: rgba(208,83,60,.55); }
+  .code .k { color: #b39ddb; } .code .s { color: #9fb56f; } .code .c { color: var(--text-faint); font-style: italic; }
+  .code .fn { color: #e6c07a; }
+
+  /* loading strip: hazard shimmer (register's one ambient motion) */
+  .loading {
+    flex: none; height: 22px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px; padding: 0 16px;
+    font-family: var(--mono); font-size: 10.5px; color: var(--text-faint);
+  }
+  .loading .stripes {
+    width: 90px; height: 8px; flex: none;
+    background: repeating-linear-gradient(-45deg, var(--signal) 0 6px, transparent 6px 12px);
+    opacity: .55;
+  }
+
+  /* ---------- right rail ---------- */
+  aside { border-left: 1px solid var(--border); display: flex; flex-direction: column; min-height: 0; }
+  .rail-sec { padding: 18px 20px; border-bottom: 1px solid var(--border); flex: none; }
+  .rail-sec.channel { flex: 1; overflow-y: auto; min-height: 0; }
+  .rail-sec .idx { font-family: var(--mono); font-size: 11px; color: var(--signal); margin-bottom: 8px; }
+  .rail-sec h2 { font-size: 13px; font-weight: 700; letter-spacing: .08em; margin-bottom: 12px; text-transform: uppercase; }
+
+  .agentline { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .agentline .sq { width: 9px; height: 9px; background: var(--signal); flex: none; }
+  .agentline .name { font-weight: 700; font-size: 13.5px; }
+  .kv { display: grid; grid-template-columns: 84px 1fr; row-gap: 5px; font-family: var(--mono); font-size: 11.5px; }
+  .kv dt { color: var(--text-faint); } .kv dd { color: var(--text-dim); }
+  .kv dd b { color: var(--text); font-weight: 500; }
+
+  .msg { font-size: 12.5px; color: var(--text-dim); margin-bottom: 12px; }
+  .msg .who { font-family: var(--mono); font-size: 10px; color: var(--text-faint); letter-spacing: .1em; margin-bottom: 3px; }
+  .msg p { line-height: 1.6; }
+  .msg .ref { display: inline-block; margin-top: 6px; font-family: var(--mono); font-size: 10.5px;
+    border: 1px solid var(--border); padding: 2px 8px; color: var(--text-dim); }
+
+  .tasks .tk { display: grid; grid-template-columns: 12px 1fr auto; gap: 10px; align-items: baseline;
+    padding: 5px 0; font-size: 12.5px; color: var(--text-dim); }
+  .tasks .tk .mk { font-family: var(--mono); font-size: 10px; }
+  .tasks .tk .st { font-family: var(--mono); font-size: 10px; color: var(--text-faint); }
+  .tasks .tk.run .mk, .tasks .tk.run .st { color: var(--signal); }
+  .tasks .tk.done { color: var(--text-faint); }
+  .tasks .tk.done .tx { text-decoration: line-through; }
+
+  .composer { margin-top: auto; padding: 16px 20px; display: flex; gap: 12px; flex: none; }
+  .composer input {
+    flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+    padding: 10px 12px; font-family: var(--mono); font-size: 11.5px; outline: none;
+  }
+  .composer input:focus { border-color: var(--signal); }
+  .composer button {
+    border: none; cursor: pointer; background: var(--signal); color: var(--signal-dark);
+    font-weight: 800; font-size: 13px; letter-spacing: .08em; padding: 10px 20px;
+    clip-path: polygon(0 0, calc(100% - var(--chamfer)) 0, 100% var(--chamfer), 100% 100%, 0 100%);
+  }
+
+  /* ---------- footer metadata strip ---------- */
+  footer {
+    flex: none; display: flex; gap: 26px; padding: 9px 24px; border-top: 1px solid var(--border);
+    font-family: var(--mono); font-size: 10.5px; color: var(--text-faint);
+  }
+  footer b { color: var(--text-dim); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="mark">FORGE<em>/</em>IDE</div>
+  <nav class="sec">
+    <a class="on" href="#"><b>01</b>REVIEW</a>
+    <a href="#"><b>02</b>RUNS</a>
+    <a href="#"><b>03</b>BENCHMARK</a>
+    <a href="#"><b>04</b>LEDGER</a>
+  </nav>
+  <div class="tail">
+    <span>RELAY 07</span>
+    <span class="live">● SYNC 19:31 UTC+8</span>
+  </div>
+</header>
+
+<div class="sechead">
+  <span class="idx">01 /</span>
+  <h1>PROMPT-EVAL REVIEW</h1>
+  <span class="meta">BRANCH feature/prompt-eval · AGENT prompt-eval-07</span>
+</div>
+
+<main>
+  <!-- PRIMARY ANCHOR: diff viewport -->
+  <section class="viewport">
+    <div class="vhead">
+      <span class="file">eval/injection.py</span>
+      <span style="color:var(--text-faint)">agent/loop.py</span>
+      <span class="diff">DIFF <b>+96 −6</b> · REVIEWED 61%</span>
+    </div>
+    <div class="code">
+      <div class="row"><span class="ln">41</span><span class="sig"></span><span class="tx"><span class="k">def</span> <span class="fn">evaluate_injection</span>(trace, policy):</span></div>
+      <div class="row"><span class="ln">42</span><span class="sig"></span><span class="tx">    <span class="c"># score each step against the defense policy</span></span></div>
+      <div class="row del"><span class="ln">43</span><span class="sig">−</span><span class="tx">    hits = [s <span class="k">for</span> s <span class="k">in</span> trace <span class="k">if</span> s.flagged]</span></div>
+      <div class="row add"><span class="ln">43</span><span class="sig">+</span><span class="tx">    hits = [s <span class="k">for</span> s <span class="k">in</span> trace.steps <span class="k">if</span> policy.match(s)]</span></div>
+      <div class="row add"><span class="ln">44</span><span class="sig">+</span><span class="tx">    severity = policy.weight(hits, default=<span class="s">"low"</span>)</span></div>
+      <div class="row"><span class="ln">45</span><span class="sig"></span><span class="tx">    <span class="k">return</span> Report(hits, severity)</span></div>
+      <div class="row"><span class="ln">46</span><span class="sig"></span><span class="tx"></span></div>
+      <div class="row"><span class="ln">47</span><span class="sig"></span><span class="tx"><span class="k">class</span> <span class="fn">Policy</span>:</span></div>
+      <div class="row"><span class="ln">48</span><span class="sig"></span><span class="tx">    <span class="k">def</span> <span class="fn">match</span>(self, step):</span></div>
+      <div class="row add"><span class="ln">49</span><span class="sig">+</span><span class="tx">        <span class="k">return</span> step.tool <span class="k">in</span> self.restricted <span class="k">or</span> step.leak</span></div>
+      <div class="row"><span class="ln">50</span><span class="sig"></span><span class="tx"></span></div>
+      <div class="row"><span class="ln">51</span><span class="sig"></span><span class="tx">    <span class="k">def</span> <span class="fn">weight</span>(self, hits, default=<span class="k">None</span>):</span></div>
+      <div class="row"><span class="ln">52</span><span class="sig"></span><span class="tx">        <span class="k">if</span> <span class="k">not</span> hits:</span></div>
+      <div class="row"><span class="ln">53</span><span class="sig"></span><span class="tx">            <span class="k">return</span> default <span class="k">or</span> <span class="s">"clean"</span></span></div>
+      <div class="row"><span class="ln">54</span><span class="sig"></span><span class="tx">        score = <span class="fn">sum</span>(self.severity_of(h) <span class="k">for</span> h <span class="k">in</span> hits)</span></div>
+      <div class="row"><span class="ln">55</span><span class="sig"></span><span class="tx">        <span class="k">return</span> self._band(score)</span></div>
+      <div class="row"><span class="ln">56</span><span class="sig"></span><span class="tx"></span></div>
+      <div class="row"><span class="ln">57</span><span class="sig"></span><span class="tx">    <span class="k">def</span> <span class="fn">_band</span>(self, score):</span></div>
+      <div class="row"><span class="ln">58</span><span class="sig"></span><span class="tx">        <span class="k">if</span> score >= <span class="s">8</span>: <span class="k">return</span> <span class="s">"critical"</span></span></div>
+      <div class="row"><span class="ln">59</span><span class="sig"></span><span class="tx">        <span class="k">if</span> score >= <span class="s">5</span>: <span class="k">return</span> <span class="s">"high"</span></span></div>
+      <div class="row"><span class="ln">60</span><span class="sig"></span><span class="tx">        <span class="k">if</span> score >= <span class="s">2</span>: <span class="k">return</span> <span class="s">"medium"</span></span></div>
+      <div class="row"><span class="ln">61</span><span class="sig"></span><span class="tx">        <span class="k">return</span> <span class="s">"low"</span></span></div>
+    </div>
+    <div class="loading"><span class="stripes"></span>AGENT TOOL CALL · read_file(eval/dataset.py) · 1.2s</div>
+    <span class="tk-b"></span>
+  </section>
+
+  <!-- SECONDARY + UTILITY rail -->
+  <aside>
+    <div class="rail-sec">
+      <div class="idx">02 /</div>
+      <h2>Agent Status</h2>
+      <div class="agentline"><span class="sq"></span><span class="name">prompt-eval-07</span></div>
+      <dl class="kv">
+        <dt>STEP</dt><dd><b>12/20</b></dd>
+        <dt>TOOL</dt><dd>read_file</dd>
+        <dt>CTX</dt><dd>38.2k</dd>
+        <dt>STATE</dt><dd><b style="color:var(--signal)">RUNNING</b></dd>
+      </dl>
+    </div>
+    <div class="rail-sec channel">
+      <div class="idx">03 /</div>
+      <h2>Channel</h2>
+      <div class="msg">
+        <div class="who">AGENT</div>
+        <p>3 个失败指向 Policy.weight：default="low" 覆盖了加权结果。建议 default=None 并在 hits 非空时强制加权。</p>
+        <span class="ref">eval/injection.py:44</span>
+      </div>
+      <div class="msg">
+        <div class="who">OPERATOR</div>
+        <p>先别改 weight，确认 dataset expectation 是否标错。</p>
+      </div>
+      <div class="msg">
+        <div class="who">AGENT</div>
+        <p>已核对：expectation 与 policy 文档一致，问题在实现侧。可出最小修复 diff。</p>
+      </div>
+    </div>
+    <div class="rail-sec tasks">
+      <div class="idx">04 /</div>
+      <h2>Task Queue</h2>
+      <div class="tk run"><span class="mk">▸</span><span class="tx">定位 severity 计算路径</span><span class="st">RUN</span></div>
+      <div class="tk"><span class="mk">·</span><span class="tx">生成最小修复 diff</span><span class="st">WAIT</span></div>
+      <div class="tk"><span class="mk">·</span><span class="tx">回归 41 tests</span><span class="st">WAIT</span></div>
+      <div class="tk done"><span class="mk">✓</span><span class="tx">核对 dataset expectations</span><span class="st">DONE</span></div>
+    </div>
+    <div class="composer">
+      <input value="先只改 default 行为，别动权重表">
+      <button>发送</button>
+    </div>
+  </aside>
+</main>
+
+<footer>
+  <span>BUILD <b>#2417</b></span>
+  <span>TESTS <b>38/41 PASS</b></span>
+  <span>CPU <b>31%</b> · MEM <b>5.2G</b></span>
+  <span>OPERATOR <b>K.</b></span>
+  <span style="margin-left:auto">v0.3.0 · FORGE/IDE FIELD TERMINAL</span>
+</footer>
+
+</body>
+</html>

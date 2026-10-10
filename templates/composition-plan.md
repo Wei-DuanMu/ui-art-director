@@ -28,7 +28,7 @@ Budget guard: decoration >5%, utility >15%, or containers outweighing content = 
 
 ## Composition Grammar
 
-Chosen pattern: [01–07 from references/composition-grammar.md]
+Chosen pattern: [01–07 from references/general/composition-grammar.md]
 
 Why this grammar matches the information's shape:
 [one or two sentences]

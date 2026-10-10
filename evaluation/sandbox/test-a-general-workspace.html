@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test A — General Mode · AI Dev Workspace</title>
+<style>
+  /* ============ GENERAL MODE · original tokens ============ */
+  :root {
+    --bg: #101216;
+    --surface: #16191f;
+    --surface-2: #1c2028;
+    --border: #2a2f3a;
+    --text: #e6e9ee;
+    --text-dim: #9aa3b0;
+    --text-faint: #67707e;
+    --accent: #4fd1c5;          /* technical teal — general-mode product choice */
+    --accent-dim: #2a7a73;
+    --warn: #e0b34f;
+    --danger: #d9614f;
+    --mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+    --sans: "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--sans); font-size: 14px; line-height: 1.5;
+    height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  /* ---------- header / utility ---------- */
+  header {
+    height: 44px; flex: none; display: flex; align-items: center; gap: 16px;
+    padding: 0 16px; border-bottom: 1px solid var(--border);
+    font-size: 12px; color: var(--text-dim);
+  }
+  header .mark { font-weight: 700; color: var(--text); letter-spacing: .04em; }
+  header .crumb { color: var(--text-faint); }
+  header .spacer { flex: 1; }
+  header .sys { font-family: var(--mono); font-size: 11px; color: var(--text-faint); display: flex; gap: 14px; }
+  header .sys b { color: var(--accent); font-weight: 500; }
+
+  main { flex: 1; display: grid; grid-template-columns: 200px 1fr 320px; min-height: 0; }
+
+  /* ---------- left: project nav (supporting) ---------- */
+  nav {
+    border-right: 1px solid var(--border); padding: 14px 0;
+    font-size: 13px; overflow-y: auto;
+  }
+  nav .group { padding: 10px 16px 6px; font-size: 10px; letter-spacing: .14em; color: var(--text-faint); text-transform: uppercase; }
+  nav a {
+    display: flex; align-items: center; gap: 8px; padding: 6px 16px;
+    color: var(--text-dim); text-decoration: none; border-left: 2px solid transparent;
+  }
+  nav a.active { color: var(--text); border-left-color: var(--accent); background: var(--surface); }
+  nav a .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); flex: none; }
+  nav a.active .dot { background: var(--accent); }
+  nav .tree { font-family: var(--mono); font-size: 12px; }
+  nav .tree a { padding-left: 24px; color: var(--text-faint); }
+  nav .tree a.hot { color: var(--text-dim); }
+
+  /* ---------- center: editor (PRIMARY ANCHOR) ---------- */
+  .editor { display: flex; flex-direction: column; min-width: 0; }
+  .editor .tabline {
+    flex: none; display: flex; align-items: center; gap: 0;
+    border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 12px;
+  }
+  .editor .tab { padding: 8px 16px; color: var(--text-faint); border-right: 1px solid var(--border); }
+  .editor .tab.on { color: var(--text); background: var(--surface); box-shadow: inset 0 2px 0 var(--accent); }
+  .editor .diffstat { margin-left: auto; padding-right: 14px; font-size: 11px; color: var(--text-faint); }
+  .editor .diffstat b { color: var(--accent); font-weight: 500; }
+  .editor .diffstat i { color: var(--danger); font-style: normal; }
+  .code {
+    flex: 1; overflow: auto; padding: 18px 0;
+    font-family: var(--mono); font-size: 13px; line-height: 1.7;
+  }
+  .code .row { display: grid; grid-template-columns: 56px 22px 1fr; }
+  .code .ln { text-align: right; padding-right: 14px; color: var(--text-faint); user-select: none; }
+  .code .sig { text-align: center; user-select: none; }
+  .code .add { background: rgba(79,209,197,.07); }
+  .code .add .sig { color: var(--accent); }
+  .code .del { background: rgba(217,97,79,.06); }
+  .code .del .sig { color: var(--danger); }
+  .code .del .tx { color: var(--text-dim); text-decoration: line-through; text-decoration-color: rgba(217,97,79,.5); }
+  .code .k { color: #7aa2f7; } .code .s { color: #9ece6a; } .code .c { color: var(--text-faint); font-style: italic; }
+  .code .fn { color: #e0b34f; }
+
+  /* ---------- terminal (supporting, bonded to editor) ---------- */
+  .term {
+    flex: none; height: 148px; border-top: 1px solid var(--border);
+    background: var(--surface); padding: 10px 16px; overflow: hidden;
+    font-family: var(--mono); font-size: 11.5px; line-height: 1.65; color: var(--text-dim);
+  }
+  .term .th { font-size: 10px; letter-spacing: .14em; color: var(--text-faint); text-transform: uppercase; margin-bottom: 4px; }
+  .term .ok { color: var(--accent); } .term .er { color: var(--danger); } .term .t { color: var(--text-faint); }
+
+  /* ---------- right: AI assistant (secondary) ---------- */
+  aside {
+    border-left: 1px solid var(--border); display: flex; flex-direction: column;
+    background: var(--surface); min-height: 0;
+  }
+  .agent { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+  .agent .who { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+  .agent .who .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .agent .state { margin-top: 6px; font-family: var(--mono); font-size: 11px; color: var(--text-faint); }
+  .agent .state b { color: var(--text-dim); font-weight: 500; }
+  .msgs { flex: 1; overflow-y: auto; padding: 14px 16px; font-size: 13px; }
+  .msg { margin-bottom: 14px; }
+  .msg .role { font-size: 10px; letter-spacing: .12em; color: var(--text-faint); text-transform: uppercase; margin-bottom: 4px; }
+  .msg p { color: var(--text-dim); }
+  .msg.ai p { color: var(--text); }
+  .msg .chip {
+    display: inline-block; margin-top: 6px; padding: 2px 8px; font-family: var(--mono); font-size: 11px;
+    border: 1px solid var(--border); color: var(--text-dim);
+  }
+  .tasks { flex: none; border-top: 1px solid var(--border); padding: 12px 16px; }
+  .tasks .th { font-size: 10px; letter-spacing: .14em; color: var(--text-faint); text-transform: uppercase; margin-bottom: 8px; }
+  .tasks .tk { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; font-size: 12.5px; color: var(--text-dim); }
+  .tasks .tk .st { font-family: var(--mono); font-size: 10px; flex: none; width: 38px; }
+  .tasks .tk.run .st { color: var(--accent); }
+  .tasks .tk.wait .st { color: var(--text-dim); }
+  .tasks .tk.done .st { color: var(--text-faint); }
+  .tasks .tk.done { color: var(--text-dim); }
+
+  /* ---------- input (utility) ---------- */
+  .composer {
+    flex: none; display: flex; gap: 10px; padding: 12px 16px; border-top: 1px solid var(--border);
+  }
+  .composer input {
+    flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+    padding: 8px 12px; font-family: var(--mono); font-size: 12px; outline: none;
+  }
+  .composer input:focus { border-color: var(--accent-dim); }
+  .composer button {
+    background: var(--accent); color: #0b0f10; border: none; padding: 8px 18px;
+    font-weight: 700; font-size: 12.5px; cursor: pointer; letter-spacing: .04em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="mark">FORGE<span style="color:var(--accent)">/</span>IDE</span>
+  <span class="crumb">scenery-engine · feature/prompt-eval</span>
+  <span class="spacer"></span>
+  <span class="sys">
+    <span>cpu <b>31%</b></span>
+    <span>mem <b>5.2G</b></span>
+    <span>agent <b>RUNNING</b></span>
+    <span>19:31 UTC+8</span>
+  </span>
+</header>
+
+<main>
+  <!-- supporting: project nav -->
+  <nav>
+    <div class="group">Workspace</div>
+    <a class="active" href="#"><span class="dot"></span>Review: prompt-eval</a>
+    <a href="#"><span class="dot"></span>Agent runs</a>
+    <a href="#"><span class="dot"></span>Benchmarks</a>
+    <div class="group">Files · changed</div>
+    <div class="tree">
+      <a class="hot" href="#">eval/injection.py <span style="color:var(--accent)">+84</span></a>
+      <a href="#">eval/dataset.py <span style="color:var(--accent)">+12</span></a>
+      <a href="#">agent/loop.py <i style="color:var(--danger);font-style:normal">−6</i></a>
+      <a href="#">README.md</a>
+    </div>
+    <div class="group">Tasks</div>
+    <a href="#"><span class="dot"></span>Eval harness v2</a>
+    <a href="#"><span class="dot"></span>Defense prompts</a>
+  </nav>
+
+  <!-- PRIMARY ANCHOR: code diff -->
+  <section class="editor">
+    <div class="tabline">
+      <span class="tab on">eval/injection.py</span>
+      <span class="tab">agent/loop.py</span>
+      <span class="diffstat">diff <b>+96</b> <i>−6</i> · reviewed 61%</span>
+    </div>
+    <div class="code">
+      <div class="row"><span class="ln">41</span><span class="sig"></span><span class="tx"><span class="k">def</span> <span class="fn">evaluate_injection</span>(trace, policy):</span></div>
+      <div class="row"><span class="ln">42</span><span class="sig"></span><span class="tx">    <span class="c"># score each step against the defense policy</span></span></div>
+      <div class="row del"><span class="ln">43</span><span class="sig">−</span><span class="tx">    hits = [s <span class="k">for</span> s <span class="k">in</span> trace <span class="k">if</span> s.flagged]</span></div>
+      <div class="row add"><span class="ln">43</span><span class="sig">+</span><span class="tx">    hits = [s <span class="k">for</span> s <span class="k">in</span> trace.steps <span class="k">if</span> policy.match(s)]</span></div>
+      <div class="row add"><span class="ln">44</span><span class="sig">+</span><span class="tx">    severity = policy.weight(hits, default=<span class="s">"low"</span>)</span></div>
+      <div class="row"><span class="ln">45</span><span class="sig"></span><span class="tx">    <span class="k">return</span> Report(hits, severity)</span></div>
+      <div class="row"><span class="ln">46</span><span class="sig"></span><span class="tx"></span></div>
+      <div class="row"><span class="ln">47</span><span class="sig"></span><span class="tx"><span class="k">class</span> <span class="fn">Policy</span>:</span></div>
+      <div class="row"><span class="ln">48</span><span class="sig"></span><span class="tx">    <span class="k">def</span> <span class="fn">match</span>(self, step):</span></div>
+      <div class="row add"><span class="ln">49</span><span class="sig">+</span><span class="tx">        <span class="k">return</span> step.tool <span class="k">in</span> self.restricted <span class="k">or</span> step.leak</span></div>
+      <div class="row"><span class="ln">50</span><span class="sig"></span><span class="tx"></span></div>
+      <div class="row"><span class="ln">51</span><span class="sig"></span><span class="tx">    <span class="k">def</span> <span class="fn">weight</span>(self, hits, default=<span class="k">None</span>):</span></div>
+      <div class="row"><span class="ln">52</span><span class="sig"></span><span class="tx">        <span class="k">if</span> <span class="k">not</span> hits:</span></div>
+      <div class="row"><span class="ln">53</span><span class="sig"></span><span class="tx">            <span class="k">return</span> default <span class="k">or</span> <span class="s">"clean"</span></span></div>
+      <div class="row"><span class="ln">54</span><span class="sig"></span><span class="tx">        score = <span class="fn">sum</span>(self.severity_of(h) <span class="k">for</span> h <span class="k">in</span> hits)</span></div>
+      <div class="row"><span class="ln">55</span><span class="sig"></span><span class="tx">        <span class="k">return</span> self._band(score)</span></div>
+      <div class="row"><span class="ln">56</span><span class="sig"></span><span class="tx"></span></div>
+      <div class="row"><span class="ln">57</span><span class="sig"></span><span class="tx">    <span class="k">def</span> <span class="fn">_band</span>(self, score):</span></div>
+      <div class="row"><span class="ln">58</span><span class="sig"></span><span class="tx">        <span class="k">if</span> score >= <span class="s">8</span>: <span class="k">return</span> <span class="s">"critical"</span></span></div>
+      <div class="row"><span class="ln">59</span><span class="sig"></span><span class="tx">        <span class="k">if</span> score >= <span class="s">5</span>: <span class="k">return</span> <span class="s">"high"</span></span></div>
+      <div class="row"><span class="ln">60</span><span class="sig"></span><span class="tx">        <span class="k">if</span> score >= <span class="s">2</span>: <span class="k">return</span> <span class="s">"medium"</span></span></div>
+      <div class="row"><span class="ln">61</span><span class="sig"></span><span class="tx">        <span class="k">return</span> <span class="s">"low"</span></span></div>
+      <div class="row"><span class="ln">62</span><span class="sig"></span><span class="tx"></span></div>
+      <div class="row"><span class="ln">63</span><span class="sig"></span><span class="tx"><span class="c"># NOTE(agent): default=None 后 hits 非空时强制加权,</span></span></div>
+      <div class="row"><span class="ln">64</span><span class="sig"></span><span class="tx"><span class="c"># 与 dataset expectation 对齐 — 待回归 41 tests</span></span></div>
+    </div>
+    <div class="term">
+      <div class="th">Terminal · pytest eval/ -q</div>
+      <div><span class="t">19:30:52</span> collected 41 tests</div>
+      <div><span class="t">19:30:54</span> eval/injection.py <span class="ok">38 passed</span>, <span class="er">3 failed</span> :: TestPolicyMatch</div>
+      <div><span class="t">19:30:54</span> <span class="er">assert severity == "high"  # got "low"</span></div>
+      <div><span class="t">19:31:01</span> agent: inspecting Policy.weight …</div>
+    </div>
+  </section>
+
+  <!-- secondary: AI assistant -->
+  <aside>
+    <div class="agent">
+      <div class="who"><span class="pulse"></span>Agent · prompt-eval-07</div>
+      <div class="state">step <b>12/20</b> · tool <b>read_file</b> · ctx <b>38.2k</b></div>
+    </div>
+    <div class="msgs">
+      <div class="msg ai">
+        <div class="role">Agent</div>
+        <p>3 个失败都指向 <b>Policy.weight</b>：default="low" 覆盖了 hits 的加权结果。建议把 default 改为 None 并在 hits 非空时强制按权重计算。</p>
+        <span class="chip">eval/injection.py:44</span>
+      </div>
+      <div class="msg">
+        <div class="role">You</div>
+        <p>先别改 weight，确认 dataset 里 expectation 是不是标错了。</p>
+      </div>
+      <div class="msg ai">
+        <div class="role">Agent</div>
+        <p>已核对：dataset 的 3 条 expectation 与 policy 文档一致，问题在实现侧。我可以出一版最小修复 diff。</p>
+      </div>
+    </div>
+    <div class="tasks">
+      <div class="th">Task list</div>
+      <div class="tk run"><span class="st">RUN</span>定位 severity 计算路径</div>
+      <div class="tk wait"><span class="st">WAIT</span>生成最小修复 diff</div>
+      <div class="tk wait"><span class="st">WAIT</span>回归 41 tests</div>
+      <div class="tk done"><span class="st">DONE</span>核对 dataset expectations</div>
+    </div>
+    <div class="composer">
+      <input value="先只改 default 的行为，别动权重表">
+      <button>发送</button>
+    </div>
+  </aside>
+</main>
+
+</body>
+</html>
